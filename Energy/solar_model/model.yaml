@@ -1,0 +1,32 @@
+model:
+  name: "Simple Solar Model"
+  timeseries_data_path: "time_series"
+
+run: 
+  mode: plan
+  solver: glpk
+
+techs:
+  solar_pv:
+    essentials:
+      carrier_out: electricity
+      parent: supply
+    constraints:
+      resource: file=irradiance_cleaned.csv:irradiance  
+      resource_unit: energy_per_area
+      lifetime: 1
+  
+  load:
+    essentials:
+      carrier_in: electricity
+      parent: demand
+    constraints:
+      resource: -1  # simple constant demand to balance the model
+
+locations:
+  nl_site:
+    techs:
+      solar_pv: {}
+      load: {}
+
+
