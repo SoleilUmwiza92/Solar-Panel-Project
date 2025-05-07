@@ -1,32 +1,36 @@
 model:
-  name: "Simple Solar Model"
-  timeseries_data_path: "time_series"
+  name: "Simple Solar PV Model"
+  timeseries_data_path: irradiance.csv
+  
 
-run: 
-  mode: plan
-  solver: glpk
+locations:
+  location1:
+    techs:
+      solar_pv:
+        constraints:
+          resource: file=global_radiation_KW
+          resource_unit: kW
+          energy_eff: 0.18
+          lifetime: 25
+          cap_max: 100  # Max installed capacity (kW)
+        costs:
+          monetary:
+            interest_rate:0
+            energy_cap: 1000  # $/kW
+            om_annual: 10     # $/kW/year
+
+      demand_elec:
+        constraints:
+          resource: file=energy_demand
+          resource_unit: kW
 
 techs:
   solar_pv:
     essentials:
       carrier_out: electricity
       parent: supply
-    constraints:
-      resource: file=irradiance_cleaned.csv:irradiance  
-      resource_unit: energy_per_area
-      lifetime: 1
-  
-  load:
+  demand_elec:
     essentials:
       carrier_in: electricity
       parent: demand
-    constraints:
-      resource: -1  # simple constant demand to balance the model
-
-locations:
-  nl_site:
-    techs:
-      solar_pv: {}
-      load: {}
-
 

@@ -15,6 +15,8 @@ from pvlib import irradiance
 print('\014')
 plt.close('all')
 warnings.filterwarnings('ignore')
+pd.set_option('display.max_columns', None)
+pd.set_option('display.width', 1000)
 
 # Convenience dict
 number_to_month = { 
@@ -72,11 +74,11 @@ try:
         station_name = stations['name'].values[0]
         print(f'Loading data from weather station: {station_name}')
         print('Saving KNMI data to file ...')
-        df.to_csv('KNMI/df_KNMI.csv')
+       # df.to_csv('~/Documents/Soleil/Lectoraar-Internship/Solar-Panel-Project/Energy/data_experimenting/df_KNMI.csv')
 except urllib.error.HTTPError as err:
     print(f'{url}: {err}')
     print(Color.R + 'loading KNMI data from file ...' + Color.END)
-    df = pd.read_csv('KNMI/df_KNMI.csv')    
+    df = pd.read_csv('~/Documents/Soleil/Lectoraar-Internship/Solar-Panel-Project/Energy/data_experimenting/df_KNMI.csv')
 
 df['HH'] = df['HH'].astype(str).str.zfill(2)
 df['YYYYMMDDHH'] = df['YYYYMMDD'].astype(str) + df['HH'].astype(str).replace('24','00')
@@ -185,7 +187,9 @@ G_module = poa['poa_global'].values
 # Store into the dataframe
 df['yield solar panel (kWh)'] = \
     (G_module * area_of_solar_panel * number_of_solar_panels * efficiency_solar_panel) / (1e3 * 3600 )
-
+print("Last data frame after calculations/n")
+print(df.head())
+df.to_csv('~/Documents/Soleil/Lectoraar-Internship/Solar-Panel-Project/Energy/data_experimenting/df_with_calculations.csv')
 # Visualisation parameters
 visualisation_day = range(1, number_to_month[visualisation_month[0]][1] + 1)
 
