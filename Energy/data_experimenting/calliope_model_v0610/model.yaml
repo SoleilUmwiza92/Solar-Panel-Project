@@ -1,0 +1,45 @@
+model:
+  name: "Zonne-opslagmodel"
+  timeseries_data_path: timeseries/
+
+run:
+  solver: glpk
+  mode: plan
+  objective_options:
+    cost_class: monetary
+
+locations:
+  mijn_stad:
+    techs:
+      pv:
+      battery:
+      demand_electricity:
+
+techs:
+  pv:
+    essentials:
+      name: "PV"
+      carrier_out: electricity
+      tech_type: supply
+    constraints:
+      resource: file=pv_resource.csv:resource
+      resource_unit: kWh
+      energy_cap_max: 10
+
+  battery:
+    essentials:
+      name: "Battery"
+      carrier: electricity
+      tech_type: storage
+    constraints:
+      energy_cap_max: 20
+      storage_cap_max: 50
+      storage_loss: 0.01
+
+  demand_electricity:
+    essentials:
+      name: "Electricity demand"
+      carrier: electricity
+      tech_type: demand
+    constraints:
+      demand: file=demand.csv:demand

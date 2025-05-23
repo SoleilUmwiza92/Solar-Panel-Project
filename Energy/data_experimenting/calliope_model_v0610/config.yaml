@@ -1,0 +1,5 @@
+model:
+  timeseries_data_path: timeseries/
+  subset_time: ['2020-01-01', '2020-01-03']
+run:
+  solver: glpk

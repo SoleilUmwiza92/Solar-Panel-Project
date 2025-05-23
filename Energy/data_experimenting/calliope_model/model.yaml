@@ -1,0 +1,45 @@
+model:
+  name: "Zonne-opslagmodel"
+  calliope_version: 0.6.10
+  timeseries_data_path: timeseries/
+
+run:
+  solver: glpk
+  mode: plan
+  objective_options.cost_class: {monetary: 1}
+
+locations:
+  mijn_stad:
+    techs:
+      pv:
+      battery:
+      demand_electricity:
+
+techs:
+  pv:
+    essentials:
+      name: "PV"
+      carrier_out: electricity
+      parent: supply
+    constraints:
+      resource: file=pv_resource.csv:resource
+      resource_unit: energy_per_area
+      energy_cap_max: 10
+
+  battery:
+    essentials:
+      name: "Battery storage"
+      carrier: power
+      parent: storage
+    constraints:
+      energy_cap_max: 20
+      storage_cap_max: 50
+      storage_loss: 0.01
+
+  demand_electricity:
+    essentials:
+      name: "Electricity demand"
+      carrier: electricity
+      parent: demand
+    constraints:
+      resource: file=demand_copy.csv:demand
